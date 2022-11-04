@@ -31,9 +31,12 @@ int main() {
     string word;
 
     while (getline(input, line)) {
+        cout << line_width << endl;
         if (line.length() == 0) {
+            line_width = max_width;
             output << "\n\n";
-        } else if (line.length() <= max_width) {
+        } else if (line.length() <= line_width) {
+            line_width = max_width;
             output << line << '\n';
         } else {
             i = 0;
