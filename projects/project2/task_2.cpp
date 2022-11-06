@@ -32,14 +32,9 @@ vector<string> split(string str, char delimiter=' ') {
 
 // tests if all characters in a string are capitalized 
 bool all_caps(string str) {
-    int ascii_val;
-    for (int i = 0; i < str.length(); i++) {
-        ascii_val = (int) str[i];
-        if (ascii_val < 65 || ascii_val > 90 && isalpha(ascii_val)) {
-            return false;
-        }
-    } // FIX ALL_CAPS FUNCTION!!!!!!
-    return true;
+    string copy = str;
+    transform(copy.begin(), copy.end(),copy.begin(), ::toupper);
+    return str == copy;
 }
 
 int main() {
@@ -69,15 +64,17 @@ int main() {
     
     string new_line = "", justification = head_just;
     while (getline(input, line)) {
-        cout << all_caps(line) << endl;
+
         // case when we encounter the empty line 
         if (line.length() == 0) {
             new_line = "";
             output << "\n\n";
         
         // case when we encounter a good line
-        } else if (line.length() <= max_width) {
+        } else if (new_line.length() + line.length() <= max_width) {
             all_caps(line) ? justification = head_just : justification = body_just;
+            new_line += ' ';
+            new_line += line;
             if (justification == "right") {
                 output << setw(max_width) << line << '\n';
             } else {
@@ -89,9 +86,21 @@ int main() {
         // case when we encounter a bad line 
         else {
             text = split(line);
+            all_caps(line) ? justification = head_just : justification = body_just;
             new_line = "";
-            for (auto &w: text) {
-                
+            for (int i = 0; i < text.size(); i++) {
+                if (new_line.length() + text[i].length() <= max_width) {
+                    new_line += text[i];
+                    if (new_line.length() + 1 <= max_width && i != text.size()-1) 
+                        new_line += ' ';
+                } else {
+                    if (justification == "right") {
+                        output << setw(max_width) << new_line << '\n';
+                    } else {
+                        output << new_line << '\n';
+                    }
+                    new_line = "";
+                }
             }
         }
     }

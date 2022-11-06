@@ -1,6 +1,13 @@
-                                        WHAT IS LOREM IPSUM?
+ WHAT IS LOREM IPSUM?
+       Lorem Ipsum is simply dummy text of the printing and 
+Lorem Ipsum has been the industry's standard dummy text ever
+  a galley of type and scrambled it to make a type specimen 
+   but also the leap into electronic typesetting, remaining 
 
 
+It was popularised in the 1960s with the release of Letraset
+    containing Lorem Ipsum passages, and more recently with 
+  software like Aldus PageMaker including versions of Lorem 
 
 
         well, thank you for listening. I appreciate you all.
