@@ -47,8 +47,12 @@ int main() {
                     output << '\n';
                 }
                 if (isspace(line[i]) || i == line.length()) {
-                    output << word << " ";
-                    line_width -= word.length() + 1;
+                    output << word;
+                    if (i != line.length()) {
+                        output << " "; 
+                        line_width--;
+                    }
+                    line_width -= word.length();
                     word = "";
                 } else {
                     word += line[i];
