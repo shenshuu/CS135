@@ -28,6 +28,19 @@ void move(Coord3D *ppos, Coord3D *pvel, double dt) {
     (*ppos).z += (*pvel).z * dt;
 }
 
+Coord3D* createCoord3D(double x, double y, double z) {
+    Coord3D *p = new Coord3D;
+    (*p).x = x;
+    (*p).y = y;
+    (*p).z = z;
+    return p;
+}
+
+void deleteCoord3D(Coord3D *p) {
+    delete p;
+    p = nullptr;
+}
+
 int main() {    
     Coord3D pos = {0, 0, 100.0};
     Coord3D vel = {1, -5, 0.2};
