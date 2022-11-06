@@ -18,7 +18,7 @@ double length(Coord3D *p) {
     return sqrt((*p).x*(*p).x + (*p).y*(*p).y + (*p).z*(*p).z);
 }
 
-Coord3D* farthestFromOrigin(Coord3D *p, Coord3D *q) {
+Coord3D* fartherFromOrigin(Coord3D *p, Coord3D *q) {
     return length(p) > length(q) ? p : q;
 }
 
@@ -42,11 +42,14 @@ void deleteCoord3D(Coord3D *p) {
 }
 
 int main() {    
-    Coord3D pos = {0, 0, 100.0};
-    Coord3D vel = {1, -5, 0.2};
+    Coord3D pointP = {10, 20, 30};
+    Coord3D pointQ = {-20, 21, -22};
 
-    move(&pos, &vel, 2.0); // object pos gets changed
-    cout << pos.x << " " << pos.y << " " << pos.z << endl;
-    // prints: 2 -10 100.4
+    cout << "Address of P: " << &pointP << endl;
+    cout << "Address of Q: " << &pointQ << endl << endl;
+
+    Coord3D * ans = fartherFromOrigin(&pointP, &pointQ);
+   
+    cout << "ans = " << ans << endl;
     return 0;
 }
