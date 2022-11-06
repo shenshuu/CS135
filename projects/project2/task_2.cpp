@@ -66,17 +66,16 @@ int main() {
     while (getline(input, line)) {
 
         // case when we encounter the empty line 
-        if (line.length() == 0) {
-            new_line = "";
-            output << "\n\n";
+        if (new_line.length() + line.length() == 0) {
+            output << "\n";
         
         // case when we encounter a good line
         } else if (new_line.length() + line.length() <= max_width) {
-            all_caps(line) ? justification = head_just : justification = body_just;
             new_line += ' ';
             new_line += line;
+            all_caps(new_line) ? justification = head_just : justification = body_just;
             if (justification == "right") {
-                output << setw(max_width) << line << '\n';
+                output << setw(max_width) << new_line << '\n';
             } else {
                 output << new_line << '\n';
             }
@@ -85,9 +84,9 @@ int main() {
 
         // case when we encounter a bad line 
         else {
+            new_line= " ";
             text = split(line);
             all_caps(line) ? justification = head_just : justification = body_just;
-            new_line = "";
             for (int i = 0; i < text.size(); i++) {
                 if (new_line.length() + text[i].length() <= max_width) {
                     new_line += text[i];
