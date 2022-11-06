@@ -9,7 +9,27 @@ Project: 2B
 #include <fstream>
 #include <string>
 #include <cctype>
+#include <vector>
 using namespace std;
+
+// separates a string into segments depending on the delimiter 
+vector<string> split(string str, char delimiter=' ') {
+    vector<string> words;
+    string word = "";
+
+    for (int i = 0; i < str.length(); i++) {
+        if (str[i] == delimiter || i == str.length()-1) {
+            if (i == str.length()-1) word += str[i];
+            words.push_back(word);
+            word = "";
+        } else {
+            word += str[i];
+        }
+    }
+
+    return words;
+}
+
 
 int main() {
     
@@ -17,64 +37,30 @@ int main() {
     input.open("input.txt");
     ofstream output;
 
-    string line, file_name, width;
-    string body_just, head_just;
+    string line, body_just = "left", head_just = "left";
     getline(input, line);
 
-    int max_width, count = 0, i = 0;
-    for (int j = 0; j < line.length(); j++) {
-        if (line[j] == ';') count++;
-    }
-
-    while (line[i] != ';') width += line[i++];
-    max_width = stoi(width);
-    i++;
-
-    while (count > 2) {
-        while (line[i] != ';') body_just += line[i++];
-        i++;
-        count--;
-        if (count <= 2) break;
-        while (line[i] != ';') head_just += line[i++];
-        i++;
-        count--;
-    }
-
-    while (line[i] != ';') file_name += line[i++];
+    vector<string> data = split(line, ';');
+    string file_name = data[data.size()-1];
+    file_name.pop_back();
+    int max_width = stoi(data[0]);
     output.open(file_name);
-
-    int line_width = max_width;
-    string word;
-
-    while (getline(input, line)) {
-        if (line.length() == 0) {
-            line_width = max_width;
-            output << "\n\n";
-        } else if (line.length() <= line_width) {
-            line_width = max_width;
-            output << line << '\n';
-        } else {
-            i = 0;
-            word = "";
-            while (i <= line.length()) {
-                if (line_width - word.length() <= 0) {
-                    line_width = max_width;
-                    output << '\n';
-                }
-                if (isspace(line[i]) || i == line.length()) {
-                    output << word;
-                    if (i != line.length()) {
-                        output << " "; 
-                        line_width--;
-                    }
-                    line_width -= word.length();
-                    word = "";
-                } else {
-                    word += line[i];
-                }
-                i++;
-            }
-        }
+    
+    if (data.size() == 3) {
+        body_just = data[1];
+        head_just = body_just;
     }
+
+    if (data.size() == 4) {
+        body_just = data[1];
+        head_just = data[2];
+    }
+    
+    while (getline(input, line)) {
+        
+    }
+
+    output.close();
+    input.close();
     return 0;
 }
