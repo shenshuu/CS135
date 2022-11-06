@@ -11,6 +11,7 @@
 #include <cassert>
 #include <cstdlib>
 #include <fstream>
+#include <cmath>
 
 using namespace std;
 
@@ -95,25 +96,20 @@ int main() {
 	// Now we can manipulate the image the way we like
 	// for example we copy its contents into a new array
 	int out[MAX_H][MAX_W];
-	int new_row = 0, new_col = 0;
 	float avg = 0.0;
 
 	for (int row = 0; row < h-1; row += 2) {
 		avg = 0.0;
 		for (int col = 0; col < w-1; col += 2) {
-			avg = (img[row][col] + img[row][col+1] + img[row+1][col] + img[row+1][col+1]) / 4.0;
-			out[new_row][new_col] = img[row][col];
-			out[new_row][new_col+1] = img[row][col];
-			out[new_row+1][new_col] = img[row][col];
-			out[new_row+1][new_col+1] = img[row][col];
-			if (new_col + 2 >= 2*w) {
-				new_row = (new_row + 2) % (2*h);
-			}
-			new_col = (new_col + 2) % (2*w);
+			avg = round((img[row][col] + img[row][col+1] + img[row+1][col] + img[row+1][col+1]) / 4.0);
+			out[row][col] = avg;
+			out[row][col+1] = avg;
+			out[row+1][col] = avg;
+			out[row+1][col+1] = avg;
 		}
 	}
 
 	// and save this new image to file "outImage.pgm"
-	writeImage(out, h*2, w*2);
+	writeImage(out, h, w);
 
 }
