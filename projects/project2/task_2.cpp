@@ -67,6 +67,15 @@ int main() {
 
         // case when we encounter the empty line 
         if (line.length() == 0) {
+            if (new_line.length() > 0) {
+                all_caps(new_line) ? justification = head_just : justification = body_just;
+                if (justification == "right") {
+                    output << setw(max_width) << new_line << "\n";
+                } else {
+                    output << new_line << "\n";
+                }
+                new_line = "";
+            }
             output << "\n";
         
         // case when we encounter a good line
@@ -98,7 +107,7 @@ int main() {
                     } else {
                         output << new_line << '\n';
                     }
-                    new_line = "";
+                    new_line = text[i];
                 }
             }
         }
