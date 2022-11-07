@@ -1,13 +1,11 @@
-What is Lorem Ipsum?
-Lorem Ipsum is simply dummy text of the printing and 
-typesetting industry.  Lorem Ipsum has been the industry's 
-standard dummy text ever since the 1500s,  when an unknown 
-printer took a galley of type and scrambled it to make a 
-type specimen book. 
+WHAT IS LOREM IPSUM?
+        Lorem Ipsum is simply dummy text of the printing and
+      industry. Lorem Ipsum has been the industry's standard
+   text ever since the 1500s, when an unknown printer took a
 
-Speaking of books, I love books. I read and write, 
-sometimes at the same time because why not! Why should I be 
-limited by my measily brain and only do one task at a time? 
-Exactly. 
+      of type and scrambled it to make a type specimen book.
+  of books, I love books. I read and write, sometimes at the
+ time because why not! Why should I be limited by my measily
 
-Well, thank you for listening. I appreciate you all :)
+            and only do one task at a time? Exactly. TITLE 2
+      Well, thank you for listening. I appreciate you all :)
