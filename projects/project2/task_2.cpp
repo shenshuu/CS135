@@ -66,39 +66,48 @@ int main() {
     while (getline(input, line)) {
 
         // case when we encounter the empty line 
-        if (new_line.length() + line.length() == 0) {
+        if (line.length() == 0) {
+            if (new_line.length() > 0) {
+                all_caps(new_line) ? justification = head_just : justification = body_just;
+                if (justification == "right") {
+                    output << setw(max_width) << new_line << "\n";
+                } else {
+                    output << new_line << "\n";
+                }
+                new_line = "";
+            }
             output << "\n";
         
         // case when we encounter a good line
         } else if (new_line.length() + line.length() <= max_width) {
-            new_line += ' ';
+            if (line.length() && new_line.length() && new_line.length() + line.length() + 1 <= max_width) {
+                new_line += ' ';
+            }
             new_line += line;
             all_caps(new_line) ? justification = head_just : justification = body_just;
             if (justification == "right") {
-                output << setw(max_width) << new_line << '\n';
+                output << setw(max_width) << new_line << "\n";
             } else {
-                output << new_line << '\n';
+                output << new_line << "\n";
             }
             new_line = "";
         }
 
         // case when we encounter a bad line 
         else {
-            new_line= " ";
             text = split(line);
             all_caps(line) ? justification = head_just : justification = body_just;
             for (int i = 0; i < text.size(); i++) {
-                if (new_line.length() + text[i].length() <= max_width) {
+                if (new_line.length() + text[i].length() + 1 <= max_width) {
+                    if (i != 0) new_line += ' ';
                     new_line += text[i];
-                    if (new_line.length() + 1 <= max_width && i != text.size()-1) 
-                        new_line += ' ';
                 } else {
                     if (justification == "right") {
                         output << setw(max_width) << new_line << '\n';
                     } else {
                         output << new_line << '\n';
                     }
-                    new_line = "";
+                    new_line = text[i];
                 }
             }
         }
