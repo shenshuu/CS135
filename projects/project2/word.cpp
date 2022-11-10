@@ -108,13 +108,12 @@ int main() {
                 new_line = "";
             }
         }
-        if (all_caps(line)) {
+
+         if (line.length() == 0) {
+            output << "\n";
+        } else if (all_caps(line)) {
             write(output, head_just, line, max_width+1);
         }
-
-        else if (line.length() == 0) {
-            output << "\n";
-        } 
         else{
             istringstream str(line);
             

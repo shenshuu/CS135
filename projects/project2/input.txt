@@ -1,4 +1,4 @@
-60;left;left;output.txt;
+60;center;center;output.txt;
 WHAT IS LOREM IPSUM?
 
 Lorem Ipsum is simply dummy text of the printing and typesetting industry.
