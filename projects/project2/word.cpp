@@ -7,16 +7,21 @@ Project: 2B
 
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <string>
 #include <vector>
 #include <cctype>
 #include <cmath>
+#include <iomanip>
+#include <algorithm>
+
 using namespace std;
 
 // centers text 
 string center_text(string text, int max_width) {
     string centered = "";
-    int spaces_needed = round((max_width - text.length()) / 2.0);
+    int spaces_needed = (max_width - text.length()) / 2;
+    if (spaces_needed % 2 != 0) spaces_needed--;
     for (int i = 0; i < spaces_needed; i++) centered += " ";
     centered += text;
     for (int i = 0; i < spaces_needed; i++) centered += " ";
@@ -26,11 +31,11 @@ string center_text(string text, int max_width) {
 // writes to output file 
 void write(ofstream& output, string justification, string new_line, int max_width) {
     if (justification == "right") {
-        output << setw(max_width) << new_line << '\n';
+        output << setw(max_width - 2) << new_line << "\n";
     } else if (justification == "center") {
     output << center_text(new_line, max_width) << "\n";  
     } else {
-        output << new_line << '\n';
+        output << new_line << setw(max_width - new_line.length() - 1) << "\n";
     }
 }
 
@@ -88,46 +93,47 @@ int main() {
         body_just = text[1];
         head_just = text[2];
     }
+
+    string word;
+    int count = 0;
     
     string new_line = "", justification = head_just;
     while (getline(input, line)) {
-
+        
         // case when we encounter the empty line 
-        if (line.length() == 0) {
+        if (line.length() == 0|| all_caps(line)) {
             if (new_line.length() > 0) {
                 all_caps(new_line) ? justification = head_just : justification = body_just;
                 write(output, justification, new_line, max_width);
                 new_line = "";
             }
-            output << "\n";
-        
-        // case when we encounter a good line
-        } else if (new_line.length() + line.length() <= max_width) {
-            if (line.length() && new_line.length() && new_line.length() + line.length() + 1 <= max_width) {
-                new_line += ' ';
-            }
-            new_line += line;
-            all_caps(new_line) ? justification = head_just : justification = body_just;
-            write(output, justification, new_line, max_width);
-            new_line = "";
+        }
+        if (all_caps(line)) {
+            write(output, head_just, line, max_width+1);
         }
 
-        // case when we encounter a bad line 
-        else {
-            text = split(line);
-            all_caps(line) ? justification = head_just : justification = body_just;
-            for (int i = 0; i < text.size(); i++) {
-                if (new_line.length() + text[i].length() + 1 <= max_width) {
-                    if(new_line.length() != 0) new_line += ' ';
-                    new_line += text[i];
+        else if (line.length() == 0) {
+            output << "\n";
+        } 
+        else{
+            istringstream str(line);
+            
+            while (str >> word) {
+                if (new_line.length() == 0) {
+                    new_line += word;
                 } else {
-                    write(output, justification, new_line, max_width);
-                    new_line = text[i];
-                }
+                    if (new_line.length() + word.length() + 1 < max_width-1) {
+                        new_line += " " + word;
+                    } else {
+                        all_caps(new_line) ? justification = head_just : justification = body_just;
+                        write(output, justification, new_line, max_width);
+                        new_line = word;
+                    }
+                } 
             }
         }
     }
-
+    write(output, justification, new_line, max_width);
     output.close();
     input.close();
     return 0;
