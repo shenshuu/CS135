@@ -30,6 +30,15 @@ vector<string> split(string str, char delimiter=' ') {
     return words;
 }
 
+string center_text(string text, int max_width) {
+    string centered = "";
+    int spaces_needed = round((max_width - text.length()) / 2.0);
+    for (int i = 0; i < spaces_needed; i++) centered += " ";
+    centered += text;
+    for (int i = 0; i < spaces_needed; i++) centered += " ";
+    return centered;
+}
+
 // tests if all characters in a string are capitalized 
 bool all_caps(string str) {
     string copy = str;
