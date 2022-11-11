@@ -7,59 +7,69 @@ Project: 2A
 
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <string>
-#include <cctype>
+
 using namespace std;
 
 int main() {
     
     ifstream input;
-    input.open("input.txt");
+    string input_file;
     ofstream output;
 
-    string line, file_name, width;
-    getline(input, line);
-    int max_width, i = 0;
+    cout << "Enter the input filename: ";
+    cin >> input_file;
+    input.open(input_file);
 
+    string line, new_line = "", file_name = "", width = "";
+    getline(input, line);
+    
+    int max_width, i = 0;
     while (line[i] != ';') width += line[i++];
     max_width = stoi(width);
     i++;
     while (line[i] != ';') file_name += line[i++];
     output.open(file_name);
 
-    int line_width = max_width;
     string word;
-
+    
     while (getline(input, line)) {
-        cout << line_width << endl;
-        if (line.length() == 0) {
-            line_width = max_width;
-            output << "\n\n";
-        } else if (line.length() <= line_width) {
-            line_width = max_width;
-            output << line << '\n';
+        
+        // case when we encounter the empty line 
+        if (line.length() == 0 || line.length() < max_width) {
+            if (new_line.length() > 0) {
+                output << new_line << "\n";
+                new_line = "";
+            }
+            if (line.length() > 0) {
+                output << line << "\n";
+            }
+        }
+
+        else if (line.length() == 0) {
+            output << "\n";
         } else {
-            i = 0;
-            word = "";
-            while (i <= line.length()) {
-                if (line_width - word.length() <= 0) {
-                    line_width = max_width;
-                    output << '\n';
-                }
-                if (isspace(line[i]) || i == line.length()) {
-                    output << word;
-                    if (i != line.length()) {
-                        output << " "; 
-                        line_width--;
-                    }
-                    line_width -= word.length();
-                    word = "";
+            istringstream str(line);
+            
+            while (str >> word) {
+                if (new_line.length() == 0) {
+                    new_line = word;
                 } else {
-                    word += line[i];
-                }
-                i++;
+                    if (new_line.length() + word.length() + 1 < max_width) {
+                        new_line += " " + word;
+                    } else {
+                        output << new_line << "\n";
+                        new_line = word;
+                    }
+                } 
             }
         }
     }
+    if (new_line.length() > 0) {
+        output << new_line << "\n";
+    }
+    output.close();
+    input.close();
     return 0;
 }
