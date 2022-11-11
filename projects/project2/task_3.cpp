@@ -2,7 +2,7 @@
 Name: Michael Shen
 Instructor: Genadiy Maryash
 Course: CSCI 135 
-Project: 2B
+Project: 2C
 */
 
 #include <iostream>
@@ -35,10 +35,20 @@ bool all_caps(string str) {
 // writes to output file 
 void write(ofstream& output, string justification, string new_line, int max_width) {
     if (justification == "right") {
-        (all_caps(new_line)) ? max_width -= 2 : max_width -= 1;
+        if (all_caps(new_line)) {
+            output << "\n";
+            max_width -= 2; 
+        } else {
+            max_width -= 1;
+        }
         output << setw(max_width) << new_line << "\n";
     } else if (justification == "center") {
-        (all_caps(new_line)) ? max_width -= 2 : max_width -= 1;
+        if (all_caps(new_line)) {
+            output << "\n";
+            max_width -= 2; 
+        } else {
+            max_width -= 1;
+        }
         output << center_text(new_line, max_width) << "\n";  
     } else {
         output << new_line << setw(max_width - new_line.length() - 1) << "\n";
@@ -112,15 +122,17 @@ int main() {
                 } else {
                     if (new_line.length() + word.length() + 1 < max_width) {
                         new_line += " " + word;
+                        cout << new_line << new_line.length() << endl;
                     } else {
                         all_caps(new_line) ? justification = head_just : justification = body_just;
                         if (filled) {
-                            if (word.length() > 0) new_line += " ";
+                            if (new_line.length() + 1 < max_width) new_line += " ";
                             i = 0;
-                            while (new_line.length() + 2 < max_width) {
+                            while (new_line.length() < max_width - 2) {
+                                // cout << new_line << new_line.length() << endl;
                                 new_line += word[i++];
                             }
-                            if (new_line.length() + 1 < max_width) new_line += "-";
+                            if (i > 0) new_line += "-"; // we broke a word 
                             write(output, justification, new_line, max_width);
                             if (double_spaced) output << "\n";
                             new_line = "";
@@ -143,5 +155,9 @@ int main() {
     }
     output.close();
     input.close();
+    // string s = "industry’s";
+    // cout << s.size() << endl;
     return 0;
 }
+
+// etting industry. Lorem Ipsum has been the industry’s
