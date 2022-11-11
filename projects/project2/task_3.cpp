@@ -2,7 +2,7 @@
 Name: Michael Shen
 Instructor: Genadiy Maryash
 Course: CSCI 135 
-Project: 2C
+Project: 2B
 */
 
 #include <iostream>
@@ -51,9 +51,10 @@ vector<string> split(string str, char delimiter=' ') {
     string word = "";
 
     for (int i = 0; i < str.length(); i++) {
-        if (str[i] == delimiter || i == str.length()-1) {
-            if (i == str.length()-1) word += str[i];
-            words.push_back(word);
+        if (i > 0 && str[i-1] == str[i] && str[i] == delimiter) {
+            continue;
+        } else if (str[i] == delimiter || i == str.length()-1) {
+            if (word.length() > 0) words.push_back(word);
             word = "";
         } else {
             word += str[i];
@@ -77,25 +78,14 @@ int main() {
     string line, body_just = "left", head_just = "left";
     bool filled = true, double_spaced = true;
     getline(input, line);
-    
     vector<string> text = split(line, ';');
+    
     string file_name = text[text.size()-1];
-    file_name.pop_back(); // removes final semicolon from file_name 
     int max_width = stoi(text[0]);
     output.open(file_name);
-    
-    if (text.size() == 3) {
-        body_just = text[1];
-        head_just = body_just;
-    }
-
-    if (text.size() >= 4) {
-        body_just = text[1];
-        head_just = text[2];
-        file_name = text[3];;
-    }
 
     string word;
+    int i = 0;
     
     string new_line = "", justification = head_just;
     while (getline(input, line)) {
@@ -124,14 +114,29 @@ int main() {
                         new_line += " " + word;
                     } else {
                         all_caps(new_line) ? justification = head_just : justification = body_just;
-                        write(output, justification, new_line, max_width);
-                        new_line = word;
+                        if (filled) {
+                            if (word.length() > 0) new_line += " ";
+                            i = 0;
+                            while (new_line.length() + 2 < max_width) {
+                                new_line += word[i++];
+                            }
+                            if (new_line.length() + 1 < max_width) new_line += "-";
+                            write(output, justification, new_line, max_width);
+                            if (double_spaced) output << "\n";
+                            new_line = "";
+                            while (i < word.length()) {
+                                new_line += word[i++];
+                            }
+                        } else {
+                            write(output, justification, new_line, max_width);
+                            if (double_spaced) output << "\n";
+                            new_line = word;
+                        }
                     }
                 } 
             }
         }
-
-        if (double_spaced) output << "\n";
+        // if (double_spaced) output << "\n";
     }
     if (new_line.length() > 0) {
         write(output, justification, new_line, max_width);
