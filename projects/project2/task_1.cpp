@@ -9,6 +9,7 @@ Project: 2A
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <iomanip>
 
 using namespace std;
 
@@ -36,7 +37,7 @@ int main() {
     
     while (getline(input, line)) {
         // case when we encounter the empty line 
-        if (line.length() == 0 || line.length() < max_width) {
+        if (line.length() == 0 || line.length() + new_line.length() + 1 < max_width) {
             if (new_line.length() > 0) {
                 // output << new_line << setw(max_width - new_line.length()) << "\n";
                 output << new_line << "\n";
@@ -65,10 +66,8 @@ int main() {
         }
         if (line.length() == 0) output << "\n";
     }
-    if (new_line.length() > 0) {
-        // output << new_line << setw(max_width - new_line.length()) << "\n";
-        output << new_line << "\n";
-    }
+
+    if (new_line.length() > 0) output << new_line;
     output.close();
     input.close();
     return 0;
