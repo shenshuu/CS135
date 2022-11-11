@@ -7,30 +7,41 @@ Project: 2B
 
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <string>
 #include <vector>
-#include <cctype>
-#include <cmath>
+#include <iomanip>
+#include <algorithm>
+
 using namespace std;
 
 // centers text 
 string center_text(string text, int max_width) {
     string centered = "";
-    int spaces_needed = round((max_width - text.length()) / 2.0);
+    int spaces_needed = (max_width - text.length()) / 2;
     for (int i = 0; i < spaces_needed; i++) centered += " ";
     centered += text;
     for (int i = 0; i < spaces_needed; i++) centered += " ";
     return centered;
 }
 
+// tests if all characters in a string are capitalized 
+bool all_caps(string str) {
+    string copy = str;
+    transform(copy.begin(), copy.end(),copy.begin(), ::toupper);
+    return str == copy;
+}
+
 // writes to output file 
 void write(ofstream& output, string justification, string new_line, int max_width) {
     if (justification == "right") {
-        output << setw(max_width) << new_line << '\n';
+        (all_caps(new_line)) ? max_width -= 2 : max_width -= 1;
+        output << setw(max_width) << new_line << "\n";
     } else if (justification == "center") {
-    output << center_text(new_line, max_width) << "\n";  
+        (all_caps(new_line)) ? max_width -= 2 : max_width -= 1;
+        output << center_text(new_line, max_width) << "\n";  
     } else {
-        output << new_line << '\n';
+        output << new_line << setw(max_width - new_line.length() - 1) << "\n";
     }
 }
 
@@ -52,12 +63,6 @@ vector<string> split(string str, char delimiter=' ') {
     return words;
 }
 
-// tests if all characters in a string are capitalized 
-bool all_caps(string str) {
-    string copy = str;
-    transform(copy.begin(), copy.end(),copy.begin(), ::toupper);
-    return str == copy;
-}
 
 int main() {
     
@@ -69,10 +74,9 @@ int main() {
     cin >> input_file;
     input.open(input_file);
 
-    cout << input_file;
     string line, body_just = "left", head_just = "left";
     getline(input, line);
-
+    
     vector<string> text = split(line, ';');
     string file_name = text[text.size()-1];
     file_name.pop_back(); // removes final semicolon from file_name 
@@ -88,46 +92,46 @@ int main() {
         body_just = text[1];
         head_just = text[2];
     }
+
+    string word;
     
     string new_line = "", justification = head_just;
     while (getline(input, line)) {
-
+        
         // case when we encounter the empty line 
-        if (line.length() == 0) {
+        if (line.length() == 0|| all_caps(line)) {
             if (new_line.length() > 0) {
                 all_caps(new_line) ? justification = head_just : justification = body_just;
                 write(output, justification, new_line, max_width);
                 new_line = "";
             }
-            output << "\n";
-        
-        // case when we encounter a good line
-        } else if (new_line.length() + line.length() <= max_width) {
-            if (line.length() && new_line.length() && new_line.length() + line.length() + 1 <= max_width) {
-                new_line += ' ';
-            }
-            new_line += line;
-            all_caps(new_line) ? justification = head_just : justification = body_just;
-            write(output, justification, new_line, max_width);
-            new_line = "";
         }
 
-        // case when we encounter a bad line 
-        else {
-            text = split(line);
-            all_caps(line) ? justification = head_just : justification = body_just;
-            for (int i = 0; i < text.size(); i++) {
-                if (new_line.length() + text[i].length() + 1 <= max_width) {
-                    if(new_line.length() != 0) new_line += ' ';
-                    new_line += text[i];
+        if (line.length() == 0) {
+            output << "\n";
+        } else if (all_caps(line)) {
+            write(output, head_just, line, max_width+1);
+        } else {
+            istringstream str(line);
+            
+            while (str >> word) {
+                if (new_line.length() == 0) {
+                    new_line = word;
                 } else {
-                    write(output, justification, new_line, max_width);
-                    new_line = text[i];
-                }
+                    if (new_line.length() + word.length() + 1 < max_width) {
+                        new_line += " " + word;
+                    } else {
+                        all_caps(new_line) ? justification = head_just : justification = body_just;
+                        write(output, justification, new_line, max_width);
+                        new_line = word;
+                    }
+                } 
             }
         }
     }
-
+    if (new_line.length() > 0) {
+        write(output, justification, new_line, max_width);
+    }
     output.close();
     input.close();
     return 0;

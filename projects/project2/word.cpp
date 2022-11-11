@@ -10,8 +10,6 @@ Project: 2B
 #include <sstream>
 #include <string>
 #include <vector>
-#include <cctype>
-#include <cmath>
 #include <iomanip>
 #include <algorithm>
 
@@ -21,7 +19,6 @@ using namespace std;
 string center_text(string text, int max_width) {
     string centered = "";
     int spaces_needed = (max_width - text.length()) / 2;
-    // if (text.length() % 2 == 0) spaces_needed++;
     for (int i = 0; i < spaces_needed; i++) centered += " ";
     centered += text;
     for (int i = 0; i < spaces_needed; i++) centered += " ";
@@ -38,18 +35,11 @@ bool all_caps(string str) {
 // writes to output file 
 void write(ofstream& output, string justification, string new_line, int max_width) {
     if (justification == "right") {
-        // output << setw(max_width - 2) << new_line << "\n";
-        if (all_caps(new_line)) {
-            output << setw(max_width - 2) << new_line << "\n";
-        } else {
-            output << setw(max_width - 1) << new_line << "\n";
-        }
+        (all_caps(new_line)) ? max_width -= 2 : max_width -= 1;
+        output << setw(max_width) << new_line << "\n";
     } else if (justification == "center") {
-        if (all_caps(new_line)) {
-            output << center_text(new_line, max_width - 2) << "\n";
-        } else {
-            output << center_text(new_line, max_width - 1) << "\n";  
-        }
+        (all_caps(new_line)) ? max_width -= 2 : max_width -= 1;
+        output << center_text(new_line, max_width) << "\n";  
     } else {
         output << new_line << setw(max_width - new_line.length() - 1) << "\n";
     }
@@ -84,10 +74,9 @@ int main() {
     cin >> input_file;
     input.open(input_file);
 
-    cout << input_file;
     string line, body_just = "left", head_just = "left";
     getline(input, line);
-
+    
     vector<string> text = split(line, ';');
     string file_name = text[text.size()-1];
     file_name.pop_back(); // removes final semicolon from file_name 
@@ -105,7 +94,6 @@ int main() {
     }
 
     string word;
-    int count = 0;
     
     string new_line = "", justification = head_just;
     while (getline(input, line)) {
@@ -119,12 +107,11 @@ int main() {
             }
         }
 
-         if (line.length() == 0) {
+        if (line.length() == 0) {
             output << "\n";
         } else if (all_caps(line)) {
             write(output, head_just, line, max_width+1);
-        }
-        else{
+        } else {
             istringstream str(line);
             
             while (str >> word) {
