@@ -28,6 +28,13 @@ int minutesUntil(Time earlier, Time later) {
     return minutes;
 }
 
+Time addMinutes(Time time0, int min) {  
+    int remaining = (min + time0.m) % 60;
+    time0.h += (min + time0.m) / 60;
+    time0.m = remaining;
+    return time0;
+}
+
 int main() {
     Time t1 = {10, 30}, t2 = {7, 20};
     std::cout << minutesUntil(t1, t2);
