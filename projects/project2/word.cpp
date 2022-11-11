@@ -21,19 +21,35 @@ using namespace std;
 string center_text(string text, int max_width) {
     string centered = "";
     int spaces_needed = (max_width - text.length()) / 2;
-    if (spaces_needed % 2 != 0) spaces_needed--;
+    // if (text.length() % 2 == 0) spaces_needed++;
     for (int i = 0; i < spaces_needed; i++) centered += " ";
     centered += text;
     for (int i = 0; i < spaces_needed; i++) centered += " ";
     return centered;
 }
 
+// tests if all characters in a string are capitalized 
+bool all_caps(string str) {
+    string copy = str;
+    transform(copy.begin(), copy.end(),copy.begin(), ::toupper);
+    return str == copy;
+}
+
 // writes to output file 
 void write(ofstream& output, string justification, string new_line, int max_width) {
     if (justification == "right") {
-        output << setw(max_width - 2) << new_line << "\n";
+        // output << setw(max_width - 2) << new_line << "\n";
+        if (all_caps(new_line)) {
+            output << setw(max_width - 2) << new_line << "\n";
+        } else {
+            output << setw(max_width - 1) << new_line << "\n";
+        }
     } else if (justification == "center") {
-    output << center_text(new_line, max_width) << "\n";  
+        if (all_caps(new_line)) {
+            output << center_text(new_line, max_width - 2) << "\n";
+        } else {
+            output << center_text(new_line, max_width - 1) << "\n";  
+        }
     } else {
         output << new_line << setw(max_width - new_line.length() - 1) << "\n";
     }
@@ -57,12 +73,6 @@ vector<string> split(string str, char delimiter=' ') {
     return words;
 }
 
-// tests if all characters in a string are capitalized 
-bool all_caps(string str) {
-    string copy = str;
-    transform(copy.begin(), copy.end(),copy.begin(), ::toupper);
-    return str == copy;
-}
 
 int main() {
     
@@ -119,9 +129,9 @@ int main() {
             
             while (str >> word) {
                 if (new_line.length() == 0) {
-                    new_line += word;
+                    new_line = word;
                 } else {
-                    if (new_line.length() + word.length() + 1 < max_width-1) {
+                    if (new_line.length() + word.length() + 1 < max_width) {
                         new_line += " " + word;
                     } else {
                         all_caps(new_line) ? justification = head_just : justification = body_just;
@@ -132,7 +142,9 @@ int main() {
             }
         }
     }
-    write(output, justification, new_line, max_width);
+    if (new_line.length() > 0) {
+        write(output, justification, new_line, max_width);
+    }
     output.close();
     input.close();
     return 0;
