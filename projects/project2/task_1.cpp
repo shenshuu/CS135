@@ -38,11 +38,13 @@ int main() {
         // case when we encounter the empty line 
         if (line.length() == 0 || line.length() < max_width) {
             if (new_line.length() > 0) {
-                output << new_line << setw(max_width - new_line.length()) << "\n";
+                // output << new_line << setw(max_width - new_line.length()) << "\n";
+                output << new_line << "\n";
                 new_line = "";
             }
             if (line.length() > 0) {
-                output << line << setw(max_width - line.length()) << "\n";
+                // output << line << setw(max_width - line.length()) << "\n";
+                output << line << "\n";
             }
         } else {
             istringstream str(line);
@@ -54,7 +56,8 @@ int main() {
                     if (new_line.length() + word.length() + 1 < max_width) {
                         new_line += " " + word;
                     } else {
-                        output << new_line << setw(max_width - new_line.length()) << "\n";
+                        // output << new_line << setw(max_width - new_line.length()) << "\n";
+                        output << new_line << "\n";
                         new_line = word;
                     }
                 } 
@@ -63,7 +66,8 @@ int main() {
         if (line.length() == 0) output << "\n";
     }
     if (new_line.length() > 0) {
-        output << new_line << setw(max_width - new_line.length()) << "\n";
+        // output << new_line << setw(max_width - new_line.length()) << "\n";
+        output << new_line << "\n";
     }
     output.close();
     input.close();
