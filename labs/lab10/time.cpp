@@ -80,6 +80,28 @@ TimeSlot scheduleAfter(TimeSlot ts, Movie nextMovie) {
     return t;
 }
 
+bool timeOverlap(TimeSlot ts1, TimeSlot ts2) {
+    TimeSlot earlier, later;
+    if (ts1.startTime.h < ts2.startTime.h) {
+        earlier = ts1;
+        later = ts2;
+    } else if (ts1.startTime.h == ts2.startTime.h && ts1.startTime.m < ts2.startTime.m) {
+        earlier = ts1;
+        later = ts2;
+    } else {
+        earlier = ts2;
+        later = ts1;
+    }
+    Time start = addMinutes(earlier.startTime, earlier.movie.duration);
+    if (start.h > later.startTime.h) {
+        return true;
+    } else if (start.h == later.startTime.h && start.m > later.startTime.m) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 int main() {
     Time t1 = {9, 15}, t2 = {12, 15}, t3 = {16, 45}, t4 = {17, 0}, t5 = {17, 1};
     Movie movie1 = {"Back to the Future", COMEDY, 116};
