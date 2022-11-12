@@ -36,15 +36,13 @@ int main() {
     string word;
     
     while (getline(input, line)) {
-        // case when we encounter the empty line 
+        
         if (line.length() == 0 || line.length() + new_line.length() + 1 < max_width) {
             if (new_line.length() > 0) {
-                // output << new_line << setw(max_width - new_line.length()) << "\n";
                 output << new_line << "\n";
                 new_line = "";
             }
             if (line.length() > 0) {
-                // output << line << setw(max_width - line.length()) << "\n";
                 output << line << "\n";
             }
         } else {
@@ -57,7 +55,6 @@ int main() {
                     if (new_line.length() + word.length() + 1 < max_width) {
                         new_line += " " + word;
                     } else {
-                        // output << new_line << setw(max_width - new_line.length()) << "\n";
                         output << new_line << "\n";
                         new_line = word;
                     }

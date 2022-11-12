@@ -155,8 +155,7 @@ int main() {
     }
     output.close();
     input.close();
-    // string s = "industry’s";
-    // cout << s.size() << endl;
+
     return 0;
 }
 
