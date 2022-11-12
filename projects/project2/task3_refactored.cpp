@@ -147,10 +147,10 @@ int main() {
             while (stream >> word) {
                 if (new_line.empty()) {
                     new_line = word;
-                } else if (new_line.length() + word.length() + 1 < max_width) {
+                } else if (new_line.length() + word.length() + 2 < max_width) {
                     new_line += " " + word;
                 } else {
-                    if (filled) {
+                    if (filled && new_line.length() + 3 < max_width) {
                         handle_fill(output, new_line, word, max_width, body_just);
                     } else {
                         write(output, body_just, new_line, max_width);
