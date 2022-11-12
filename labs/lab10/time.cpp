@@ -51,25 +51,23 @@ public:
     Time startTime;  // when it starts
 };
 
-void printTimeSlot(TimeSlot ts) {
-    std::string time_slot = ts.movie.title + " ";
+void printMovie(Movie mv){
     std::string g;
-    switch (ts.movie.genre) {
+    switch (mv.genre) {
         case ACTION   : g = "ACTION"; break;
         case COMEDY   : g = "COMEDY"; break;
-        case DRAMA    : g = "DRAMA"; break;
+        case DRAMA    : g = "DRAMA";  break;
         case ROMANCE  : g = "ROMANCE"; break;
         case THRILLER : g = "THRILLER"; break;
     }
-    time_slot += g + " ";
-    time_slot += "(" + std::to_string(ts.movie.duration) + " min)" + " ";
-    time_slot += '[';
-    time_slot += "starts at " + std::to_string(ts.startTime.h) + ":";
-    time_slot += std::to_string(ts.startTime.m) + ", ";
+    std::cout << mv.title << " " << g << " (" << mv.duration << " min)";
+}
+
+void printTimeSlot(TimeSlot ts) {
+    printMovie(ts.movie);
+    std::cout << " [starts at " << ts.startTime.h << ":" << ts.startTime.m;
     Time end_time = addMinutes(ts.startTime, ts.movie.duration);
-    time_slot += "ends by " + std::to_string(end_time.h) + ":";
-    time_slot += std::to_string(end_time.m) + "]";
-    std::cout << time_slot << "\n";
+    std::cout << ", ends by " << end_time.h << ":" << end_time.m << "]";
 }
 
 TimeSlot scheduleAfter(TimeSlot ts, Movie nextMovie) {
