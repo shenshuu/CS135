@@ -53,11 +53,8 @@ class Network {
             Network(): numUsers(0) {}
 
             bool addUser(string usrn, string dspn) {
-                if (findID(usrn) != -1 || numUsers == MAX_USERS) {
+                if (findID(usrn) != -1) {
                     return false;
-                }
-                for (int i = 0; i < usrn.size(); i++) {
-                    if (!iswalnum(usrn[i])) return false;
                 }
                 for (int i = 0; i < MAX_USERS; i++) {
                     if (profiles[i].getUsername() == "") {
